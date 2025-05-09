@@ -1,3 +1,6 @@
+<!-- Author: Kaisa Juhola -->
+<!-- Date: 09.05.2025 -->
+
 ````mermaid
 sequenceDiagram
     participant browser
