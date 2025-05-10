@@ -1,32 +1,41 @@
 <!-- Author: Kaisa Juhola -->
-<!-- Date: 09.05.2025 -->
+<!-- Date: 10.05.2025 -->
 
 ````mermaid
 sequenceDiagram
-    participant browser
-    participant server
+    participant selain
+    participant palvelin
     
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
-    activate server
-    server-->>browser: HTML document
-    deactivate server
-    
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
-    activate server
-    server-->>browser: the css file
-    deactivate server
-    
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
-    activate server
-    server-->>browser: the JavaScript file
-    deactivate server
-    
-    Note right of browser: The browser starts executing the JavaScript code that fetches the JSON from the server
-    
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
-    activate server
-    server-->>browser: [{ "content": "HTML is easy", "date": "2023-1-1" }, ... ]
-    deactivate server    
+    Note right of selain: Selain lähettää lomakkeelle syötetyn datan palvelimelle bodyna.
 
-    Note right of browser: The browser executes the callback function that renders the notes 
+    selain->>palvelin: POST https://studies.cs.helsinki.fi/exampleapp/new_note
+    activate palvelin
+    palvelin-->>selain: Statuskoodi 302/uudelleenohjauspyyntö
+    deactivate palvelin
+
+    Note left of palvelin: Palvelin saa POST-pyynnön datan pyytämällä req.body. Palvelin luo uutta muistiinpanoa vastaavan olion ja laittaa sen muistiinpanot sisältävään taulukkoon nimeltä notes.
+
+    selain->>palvelin: POST https://studies.cs.helsinki.fi/exampleapp/notes
+    activate palvelin
+    palvelin-->>selain: HTML dokumentti
+    deactivate palvelin
+    
+    selain->>palvelin: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate palvelin
+    palvelin-->>selain: CSS tiedosto
+    deactivate palvelin
+    
+    selain->>palvelin: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate palvelin
+    palvelin-->>selain: JavaScript tiedosto
+    deactivate palvelin
+    
+    Note right of selain: Selain alkaa suorittaa hakemaansa JavaScript-koodia joka tekee pyynnön:
+    
+    selain->>palvelin: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate palvelin
+    palvelin-->>selain: Muistiinpanot JSON-muotoisena raakadatana. Uusin muistiinpano viimeisenä.
+    deactivate palvelin    
+
+    Note right of selain: Selain suorittaa tapahtumankäsittelijän, joka renderöi muistiinpanot ruudulle.
 ````
