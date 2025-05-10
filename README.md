@@ -1,3 +1,3 @@
 Full Stack Open
-Osa 0 tehtäväpalautukset
+Tehtäväpalautukset
 Tekijä: Kaisa Juhola
