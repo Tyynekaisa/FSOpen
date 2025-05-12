@@ -1,3 +1,17 @@
-Full Stack Open
-Tehtäväpalautukset
-Tekijä: Kaisa Juhola
+# FULL STACK OPEN
+
+Anna-Kaisa Juhola
+
+## Osa 0 Tehtäväpalautukset
+
+* 0.4 [Uusi muistiinpano](/Osa0/0.4_uusi_muistiinpano.md)
+* 0.5 [Single Page App](/Osa0/0.5_single_page_app.md)  
+* 0.6 [SPA Uusi muistiinpano](/Osa0/0.6_spa_uusi_muistiinpano.md)  
+
+
+## Osa 1 Tehtäväpalautukset
+
+* 1.1 - 1.5 [Kurssitiedot](/Osa1/kurssitiedot/)
+* 1.6 - 1.11 [Unicafe](/Osa1/unicafe/)  
+* 1.12 - 1.14 [Anekdootit](/Osa1/anekdootit/)  
+
