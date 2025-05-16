@@ -1,3 +1,5 @@
+import WeatherDetails from './weather'
+
 const CountryList = ({ country, showCountry }) => {
   return (
     <>
@@ -6,7 +8,7 @@ const CountryList = ({ country, showCountry }) => {
   )
 }
 
-const CountryDetails = ({country}) => {
+const CountryDetails = ({ country, apikey }) => {
   return (
     <div>
       <h1>{country.name.common}</h1>
@@ -18,12 +20,13 @@ const CountryDetails = ({country}) => {
         <li key={language}>{language}</li>
         ))}
       </ul>
-      <img src={country.flags.png} alt={country.flags.alt}></img>
+      <img src={country.flags.png} alt={country.flags.alt} style={{border: '1px solid grey'}}></img>
+      <WeatherDetails country={country} apikey={apikey} />
     </div>
   )
 }
 
-const Countries = ({ countries, showCountry }) => {
+const Countries = ({ countries, showCountry, apikey }) => {
   if (countries.length > 10) {
     return (
       <p>Too many matches, specify another filter</p>
@@ -31,7 +34,7 @@ const Countries = ({ countries, showCountry }) => {
   } else if (countries.length === 1) {
     return (
       <div>
-        <CountryDetails country={countries[0]} />
+        <CountryDetails country={countries[0]} apikey={apikey} />
       </div>
     )
   } else {

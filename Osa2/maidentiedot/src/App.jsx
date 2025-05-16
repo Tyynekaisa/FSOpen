@@ -7,6 +7,7 @@ const App = () => {
   const [countries, setCountries] = useState([])
   const [filter, setFilter] = useState('')
   const [selectedCountry, setSelectedCountry] = useState(null)
+  const apikey = import.meta.env.VITE_SOME_KEY
 
   useEffect(() => {
     console.log('effect')
@@ -44,8 +45,8 @@ const App = () => {
       handleFilterChange={handleFilterChange}
     />
     {selectedCountry 
-      ? <CountryDetails country={selectedCountry} />
-      : <Countries countries={filteredCountries} showCountry={showCountry} />
+      ? <CountryDetails country={selectedCountry} apikey={apikey} />
+      : <Countries countries={filteredCountries} showCountry={showCountry} apikey={apikey} />
     }
 
   </div>
