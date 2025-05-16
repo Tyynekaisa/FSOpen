@@ -19,3 +19,4 @@ Anna-Kaisa Juhola
 
 * 2.1. - 2.5. [Kurssitiedot](/Osa2/kurssitiedot/)
 * 2.6. - 2.17. [Puhelinluettelo](/Osa2/puhelinluettelo)
+* 2.18. - 2.20. [Maiden tiedot](/Osa2/maidentiedot)  
