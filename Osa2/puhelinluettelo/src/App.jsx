@@ -2,15 +2,17 @@ import { useState, useEffect } from 'react'
 import personService from './services/persons'
 import { PhoneBookForm, FilterForm } from './components/forms'
 import Persons from './components/persons'
+import { Notification, ErrorNotification } from './components/notifications'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notificationMessage, setNotification] = useState(null)
+  const [errorMessage, setError] = useState(null)
 
   useEffect(() => {
-    console.log('effect')
     personService
       .getAll()
       .then(initialPersons => {
@@ -35,15 +37,30 @@ const App = () => {
         personService
           .update(existingPerson.id, personObject)
             .then(returnedPerson => {
-            console.log('Palvelin palautti:', returnedPerson)
-            setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson))
+              setNotification(`Number of ${existingPerson.name} changed`)
+              setTimeout(() => {
+                setNotification(null)
+              }, 5000)
+            setPersons(persons.map(p => p.id !== existingPerson.id ? p : returnedPerson))
+          })
+          .catch(error => {
+            setError(`Information of ${existingPerson.name} was already removed from server`)
+            setTimeout(() => {
+              setError(null)
+            }, 5000)
+            personService
+              .getAll()
+              .then(updatedPersons => setPersons(updatedPersons))
           })
       }
     } else {
       personService
         .create(personObject)
           .then(returnedPerson => {
-            console.log('Palvelin palautti:', returnedPerson)
+            setNotification(`Added ${newName}`)
+              setTimeout(() => {
+                setNotification(null)
+              }, 5000)
             setPersons(persons.concat(returnedPerson))
           })
     }
@@ -58,9 +75,24 @@ const App = () => {
       personService
         .deleteItem(id)
         .then(() => {
-          console.log('Poistettiin:', deletedPerson.name)
           setPersons(persons.filter((person) => person.id !== id))
+          setNotification(
+              `Deleted ${deletedPerson.name}`
+            )
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+            setPersons(persons.filter(p => p.id !== id))
         })
+        .catch(error => {
+            setError(`Information of ${deletedPerson.name} was already removed from server`)
+            setTimeout(() => {
+              setError(null)
+            }, 5000)
+            personService
+              .getAll()
+              .then(updatedPersons => setPersons(updatedPersons))
+          })
     }
   }
 
@@ -83,6 +115,8 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
+      <Notification message={notificationMessage} />
+      <ErrorNotification message={errorMessage} />
 
       <h2>Search numbers</h2>
       <FilterForm
