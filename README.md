@@ -8,7 +8,6 @@ Anna-Kaisa Juhola
 * 0.5. [Single Page App](/Osa0/0.5_single_page_app.md)  
 * 0.6. [SPA Uusi muistiinpano](/Osa0/0.6_spa_uusi_muistiinpano.md)  
 
-
 ## Osa 1 Tehtäväpalautukset
 
 * 1.1. - 1.5. [Kurssitiedot](/Osa1/kurssitiedot/)
@@ -20,3 +19,7 @@ Anna-Kaisa Juhola
 * 2.1. - 2.5. [Kurssitiedot](/Osa2/kurssitiedot/)
 * 2.6. - 2.17. [Puhelinluettelo](/Osa2/puhelinluettelo)
 * 2.18. - 2.20. [Maiden tiedot](/Osa2/maidentiedot)  
+
+## Osa 3 Tehtäväpalautukse
+
+* 3.1. - 3.8. [Puhelinluettelon backend](/Osa3/puhelinluettelo/)
