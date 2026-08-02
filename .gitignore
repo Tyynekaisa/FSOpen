@@ -2,3 +2,4 @@
 Esimerkit
 
 node_modules
+*.env
