@@ -36,11 +36,11 @@ const App = () => {
       if (confirm(`${newName} is already added to phonebook. Do you want to replace the old number with a new one?`)) {
         personService
           .update(existingPerson.id, personObject)
-            .then(returnedPerson => {
-              setNotification(`Number of ${existingPerson.name} changed`)
-              setTimeout(() => {
-                setNotification(null)
-              }, 5000)
+          .then(returnedPerson => {
+            setNotification(`Number of ${existingPerson.name} changed`)
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
             setPersons(persons.map(p => p.id !== existingPerson.id ? p : returnedPerson))
           })
           .catch(error => {
@@ -57,20 +57,20 @@ const App = () => {
     } else {
       personService
         .create(personObject)
-          .then(returnedPerson => {
-            setNotification(`Added ${newName}`)
-              setTimeout(() => {
-                setNotification(null)
-              }, 5000)
-            setPersons(persons.concat(returnedPerson))
-          })
-          .catch(error => {
-            console.log(error)
-            setError(error)
+        .then(returnedPerson => {
+          setNotification(`Added ${newName}`)
             setTimeout(() => {
-              setError(null)
+              setNotification(null)
             }, 5000)
-          })
+          setPersons(persons.concat(returnedPerson))
+        })
+        .catch(error => {
+          console.log(error.response)
+          setError(error.response.data.error)
+          setTimeout(() => {
+            setError(null)
+          }, 5000)
+        })
     }
     setNewName('')
     setNewNumber('')
