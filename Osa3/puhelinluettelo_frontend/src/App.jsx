@@ -44,6 +44,7 @@ const App = () => {
             setPersons(persons.map(p => p.id !== existingPerson.id ? p : returnedPerson))
           })
           .catch(error => {
+            console.log(error)
             setError(`Information of ${existingPerson.name} was already removed from server`)
             setTimeout(() => {
               setError(null)
@@ -62,6 +63,13 @@ const App = () => {
                 setNotification(null)
               }, 5000)
             setPersons(persons.concat(returnedPerson))
+          })
+          .catch(error => {
+            console.log(error)
+            setError(error)
+            setTimeout(() => {
+              setError(null)
+            }, 5000)
           })
     }
     setNewName('')
@@ -85,7 +93,8 @@ const App = () => {
             setPersons(persons.filter(p => p.id !== id))
         })
         .catch(error => {
-            setError(`Information of ${deletedPerson.name} was already removed from server`)
+          console.log(error)
+          setError(`Information of ${deletedPerson.name} was already removed from server`)
             setTimeout(() => {
               setError(null)
             }, 5000)
