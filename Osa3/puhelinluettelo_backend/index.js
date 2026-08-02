@@ -1,7 +1,8 @@
 // Full Stack Open 2026
-// Osa 3, tehtävät 3.1. - 3.11.
+// Osa 3, tehtävät 3.1. - 3.14.
 // Puhelinluettelon backend
-// Kaisa Juhola
+// Anna-Kaisa Juhola
+
 require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
@@ -25,21 +26,22 @@ app.get('/api/persons', (request, response) => {
 
 app.get('/info', (request, response) => {
   const date = new Date()
-  response.send(`
+  Person.find({}).then(persons => {
+    response.send(`
     <h1>Phonebook Info</h1>
     <p>Phonebook has info for ${persons.length} people</p>
     <p>${date}</p>`)
+  })
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  const person = persons.find(person => person.id === id)
-  
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+  const person = Person.findById(request.params.id).then(person => {
+    if (person) {
+      response.json(person)
+    } else {
+      response.status(404).end()
+    }
+  })
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -48,12 +50,6 @@ app.delete('/api/persons/:id', (request, response) => {
 
   response.status(204).end()
 })
-
-const generateRandomId = () => {
-    const randomId =  Math.floor(Math.random() * 1000000).toString()
-    console.log(randomId)
-    return randomId
-}
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
@@ -70,22 +66,21 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  if (persons.some(p => p.name === body.name)) {
-    return response.status(400).json({ 
-      error: 'name must be unique' 
-    })
-  }
-
-  const person = {
-    id: generateRandomId(),
+  const person = new Person({
     name: body.name,
     number: body.number
-  }
+  })
 
-  persons = persons.concat(person)
-
-  response.json(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
 
 // port
 const PORT = process.env.PORT || 3001
