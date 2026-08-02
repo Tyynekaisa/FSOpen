@@ -9,8 +9,6 @@ const morgan = require('morgan')
 const app = express()
 const Person = require('./models/person')
 
-let persons = []
-
 // middlewares
 app.use(express.json())
 morgan.token('body', (req) => JSON.stringify(req.body))
@@ -44,13 +42,6 @@ app.get('/api/persons/:id', (request, response) => {
   })
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  persons = persons.filter(person => person.id !== id)
-
-  response.status(204).end()
-})
-
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
@@ -76,6 +67,18 @@ app.post('/api/persons', (request, response) => {
   })
 })
 
+app.delete('/api/persons/:id', (request, response) => {
+  Person.findByIdAndDelete(request.params.id).then(() => {
+    response.status(204).end()
+  })
+})
+
+// app.delete('/api/persons/:id', (request, response) => {
+//   const id = request.params.id
+//   persons = persons.filter((person) => person.id !== id)
+//   response.status(204).end()
+// })
+
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
@@ -83,7 +86,7 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint)
 
 // port
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
