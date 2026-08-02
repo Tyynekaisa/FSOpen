@@ -1,0 +1,2 @@
+DELETE https://fsopen-8oki.onrender.com/api/persons/1
+Content-Type: application/json

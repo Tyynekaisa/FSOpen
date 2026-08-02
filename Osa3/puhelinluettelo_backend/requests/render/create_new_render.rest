@@ -1,0 +1,7 @@
+POST https://fsopen-8oki.onrender.com/api/persons
+Content-Type: application/json
+
+{
+    "name": "Olli Ohjelmoija",
+    "number": "98765"
+}

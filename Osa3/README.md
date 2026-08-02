@@ -10,4 +10,5 @@ Palvelimen ohjelmointi NodeJS:n Express-kirjastolla
 * [Frontend](/Osa3/puhelinluettelo_frontend/)
   * (Kopioitu suoraan [Osasta 2](/Osa2/puhelinluettelo/), baseUrl muutettu)
   * Toimii myös paikallisesti
-* [Render deploy](https://fsopen-8oki.onrender.com/)
+* [Backend Renderissä](https://fsopen-8oki.onrender.com/api/persons)
+* [Full stack Renderissä](https://fsopen-8oki.onrender.com)

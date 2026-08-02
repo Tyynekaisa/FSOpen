@@ -20,6 +20,6 @@ Anna-Kaisa Juhola
 * 2.6. - 2.17. [Puhelinluettelo](/Osa2/puhelinluettelo)
 * 2.18. - 2.20. [Maiden tiedot](/Osa2/maidentiedot)  
 
-## Osa 3 Tehtäväpalautukse
+## Osa 3 Tehtäväpalautukset
 
-* 3.1. - 3.8. [Puhelinluettelon backend](/Osa3/puhelinluettelo/)
+* 3.1. - 3.11. [Osa 3](/Osa3/README.md)

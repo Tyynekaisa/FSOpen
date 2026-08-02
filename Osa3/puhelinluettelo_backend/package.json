@@ -1,7 +1,7 @@
 {
   "name": "puhelinluettelo",
   "version": "1.0.0",
-  "description": "Fullstack Open - harjoitus 3.1. - Puhelinluettelo",
+  "description": "Fullstack Open - Osa 3 - Puhelinluettelo",
   "license": "MIT",
   "author": "Kaisa Juhola",
   "type": "commonjs",
