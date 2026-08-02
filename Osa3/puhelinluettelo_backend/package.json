@@ -9,10 +9,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "node --watch index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "dependencies": {
-    "express": "^5.2.1",
-    "morgan": "^1.11.0"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:ui": "rm -rf dist && cd ../puhelinluettelo_frontend && npm run build && cp -r dist ../puhelinluettelo_backend",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push"
   }
 }

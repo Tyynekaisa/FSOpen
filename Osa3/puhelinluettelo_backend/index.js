@@ -7,7 +7,6 @@ const express = require('express')
 const morgan = require('morgan')
 const app = express()
 
-// Tehtävä 3.1. Puhelinluettelon backend step1
 let persons = [
   {
     id: "1",
@@ -31,19 +30,17 @@ let persons = [
   }
 ]
 
+// middlewares
 app.use(express.json())
-
-
-// Tehtävät 3.7-3.8. Puhelinluettelon backend steps7-8
 morgan.token('body', (req) => JSON.stringify(req.body))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+app.use(express.static('dist'))
 
-// Tehtävä 3.1. Puhelinluettelon backend step1 jatkuu
+// api routes
 app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
-// Tehtävä 3.2. Puhelinluettelon backend step2
 app.get('/info', (request, response) => {
   const date = new Date()
   response.send(`
@@ -52,7 +49,6 @@ app.get('/info', (request, response) => {
     <p>${date}</p>`)
 })
 
-// Tehtävä 3.3. Puhelinluettelon backend step3
 app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
   const person = persons.find(person => person.id === id)
@@ -64,7 +60,6 @@ app.get('/api/persons/:id', (request, response) => {
   }
 })
 
-// Tehtävä 3.4. Puhelinluettelon backend step4
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id
   persons = persons.filter(person => person.id !== id)
@@ -72,7 +67,6 @@ app.delete('/api/persons/:id', (request, response) => {
   response.status(204).end()
 })
 
-// Tehtävä 3.5. Puhelinluettelon backend steps 5&6
 const generateRandomId = () => {
     const randomId =  Math.floor(Math.random() * 1000000).toString()
     console.log(randomId)
@@ -111,6 +105,7 @@ app.post('/api/persons', (request, response) => {
   response.json(person)
 })
 
-const PORT = 3001
+// port
+const PORT = process.env.PORT || 3001
 app.listen(PORT)
 console.log(`Server running on port ${PORT}`)
