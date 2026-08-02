@@ -1,5 +1,5 @@
 // Full Stack Open 2026
-// Osa 3, tehtävät 3.1. - 3.14.
+// Osa 3, tehtävät 3.1. - 3.18.
 // Puhelinluettelon backend
 // Anna-Kaisa Juhola
 
@@ -43,21 +43,21 @@ app.get('/api/persons/:id', (request, response, next) => {
       response.status(404).end()
     }
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
   if (!body.name) {
-    return response.status(400).json({ 
-      error: 'name missing' 
+    return response.status(400).json({
+      error: 'name missing'
     })
   }
 
   if (!body.number) {
-    return response.status(400).json({ 
-      error: 'number missing' 
+    return response.status(400).json({
+      error: 'number missing'
     })
   }
 
@@ -75,7 +75,7 @@ app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id).then(() => {
     response.status(204).end()
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -93,7 +93,7 @@ app.put('/api/persons/:id', (request, response, next) => {
       response.json(updatedPerson)
     })
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 // unknown endpoint

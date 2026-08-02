@@ -22,4 +22,4 @@ Anna-Kaisa Juhola
 
 ## Osa 3 Tehtäväpalautukset
 
-* 3.1. - 3.11. [Osa 3](/Osa3/README.md)
+* 3.1. - 3.18. [Osa 3](/Osa3/README.md)
