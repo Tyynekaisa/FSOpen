@@ -1,5 +1,5 @@
 // Full Stack Open 2026
-// Osa 3, tehtävät 3.1. - 3.8.
+// Osa 3, tehtävät 3.1. - 3.11.
 // Puhelinluettelon backend
 // Kaisa Juhola
 
@@ -107,5 +107,6 @@ app.post('/api/persons', (request, response) => {
 
 // port
 const PORT = process.env.PORT || 3001
-app.listen(PORT)
-console.log(`Server running on port ${PORT}`)
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`)
+})
