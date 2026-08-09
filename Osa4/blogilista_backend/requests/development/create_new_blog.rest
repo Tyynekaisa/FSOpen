@@ -1,0 +1,9 @@
+POST http://localhost:3001/api/blogs/
+Content-Type: application/json
+
+{
+    "title": "Miten oppia JavaScriptia helpoiten?",
+    "author": "Leena",
+    "url": "https://www.w3schools.com/js/default.asp",
+    "likes": 99
+}
