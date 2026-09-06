@@ -1,9 +1,11 @@
 POST http://localhost:3001/api/blogs/
 Content-Type: application/json
+Authorization: Bearer <token tähän>
 
 {
-    "title": "Miten oppia JavaScriptia helpoiten?",
-    "author": "Leena",
-    "url": "https://www.w3schools.com/js/default.asp",
-    "likes": 99
+    "title": "Testataan blogin luontia userExtractor middlewarella",
+    "author": "John Doe",
+    "url": "https://fullstackopen.com/osa4/token_perustainen_kirjautuminen",
+    "likes": 99,
+    "userId": "6a9d720dbed778eeb79007a5"
 }
