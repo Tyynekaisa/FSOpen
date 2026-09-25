@@ -3,16 +3,18 @@ const User = require('../models/user')
 
 const initialBlogs = [
   {
-    title: 'React patterns',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html',
-    likes: 10,
+    title: 'Bloggaaminen on kivaa!',
+    author: 'Kaisa',
+    url: 'www.google.com',
+    likes: 54,
+    id: '6a7778156ea13507eb92fa53',
   },
   {
-    title: 'Clean code',
-    author: 'Robert C. Martin',
-    url: 'http://blog.cleancoder.com/uncle-bob/2017/05/05/TestDefinitions.html',
-    likes: 10,
+    title: 'Miten oppia JavaScriptia helpoiten?',
+    author: 'Leena',
+    url: 'https://www.w3schools.com/js/default.asp',
+    likes: 99,
+    id: '6a785cd7db2c87dced7fe86b',
   },
 ]
 

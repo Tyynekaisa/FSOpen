@@ -1,11 +1,11 @@
 POST http://localhost:3001/api/blogs/
 Content-Type: application/json
-Authorization: Bearer <token tähän>
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImxlZW51c2thIiwiaWQiOiI2YTlkN2Q5NDk4YjJlNDBjNjRlMmUxYTMiLCJpYXQiOjE3OTAzMzg0NDYsImV4cCI6MTc5MDM0MjA0Nn0.qPAHzSvyiK1FXKkuqEQFeC7CHtOa0iPy2W0Sg8Cdarc
 
 {
-    "title": "Testataan blogin luontia userExtractor middlewarella",
-    "author": "John Doe",
+    "title": "Uutta testiä kehiin",
+    "author": "Kaisa Juhola",
     "url": "https://fullstackopen.com/osa4/token_perustainen_kirjautuminen",
-    "likes": 99,
+    "likes": 156,
     "userId": "6a9d720dbed778eeb79007a5"
 }

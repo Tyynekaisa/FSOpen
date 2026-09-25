@@ -10,7 +10,7 @@
     "start": "cross-env NODE_ENV=production node index.js",
     "blogilista": "node --watch blogilista.js",
     "dev": "cross-env NODE_ENV=development node --watch index.js",
-    "test": "cross-env NODE_ENV=test node --test",
+    "test": "cross-env NODE_ENV=test node --test --test-concurrency=1",
     "build:ui": "rm -rf dist && cd ../blogilista_frontend && npm run build && cp -r dist ../blogilista_backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push",
     "lint": "eslint ."

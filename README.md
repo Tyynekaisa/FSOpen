@@ -31,6 +31,6 @@ Anna-Kaisa Juhola
 
 ## Osa 4 Tehtäväpalautukset
 
-- Tehtävät 4.1. - 4.22.
+- Tehtävät 4.1. - 4.23.
   - [Blogilista Backend](/Osa4/blogilista_backend/)
   - [Blogilista Testit](/Osa4/blogilista_backend/tests/)
