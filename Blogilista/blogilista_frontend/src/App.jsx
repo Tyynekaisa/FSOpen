@@ -1,19 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { Notification, ErrorNotification } from './components/Notification'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState(null)
-  const [userName, setuserName] = useState('')
+  const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs.blogs))
@@ -28,26 +30,20 @@ const App = () => {
     }
   }, [])
 
-  const addBlog = (event) => {
-    event.preventDefault()
+  const addBlog = (blogObject) => {
     try {
-      const blogObject = {
-        title: newTitle,
-        author: newAuthor,
-        url: newUrl,
-      }
-      if (!newTitle || !newAuthor || !newUrl) {
+      if (!blogObject.title || !blogObject.author || !blogObject.url) {
         setErrorMessage('Kaikki kentät tulee täyttää')
         setTimeout(() => {
           setErrorMessage(null)
         }, 3000)
         return
       }
-
+      blogFormRef.current.toggleVisibility()
       blogService.create(blogObject).then((returnedBlog) => {
         setBlogs(blogs.concat(returnedBlog))
       })
-      setNotificationMessage(`Uusi blogi ${newTitle} lisätty!`)
+      setNotificationMessage(`Uusi blogi ${blogObject.title} lisätty!`)
       setTimeout(() => {
         setNotificationMessage(null)
       }, 3000)
@@ -67,7 +63,7 @@ const App = () => {
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-      setuserName('')
+      setUserName('')
       setPassword('')
       setNotificationMessage(`Tervetuloa ${user.name}!`)
       setTimeout(() => {
@@ -90,36 +86,25 @@ const App = () => {
     }, 3000)
   }
 
-  // const handleBlogChange = (event) => {
-  //   setNewTitle(event.target.value)
-  //   setNewAuthor(event.target.value)
-  //   setNewUrl(event.target.value)
-  // }
-
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        <label>
-          Käyttäjätunnus
-          <input
-            type='text'
-            value={userName}
-            onChange={({ target }) => setuserName(target.value)}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Salasana
-          <input
-            type='password'
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
-        </label>
-      </div>
-      <button type='submit'>Kirjaudu sisään</button>
-    </form>
+    <Togglable buttonLabel='Kirjaudu sisään'>
+      <LoginForm
+        username={userName}
+        password={password}
+        handleUsernameChange={({ target }) => setUserName(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleSubmit={handleLogin}
+      />
+    </Togglable>
+  )
+
+  const blogForm = () => (
+    <Togglable
+      buttonLabel='Luo uusi blogi'
+      ref={blogFormRef}
+    >
+      <BlogForm createBlog={addBlog} />
+    </Togglable>
   )
 
   const blogList = () => (
@@ -135,42 +120,6 @@ const App = () => {
     </div>
   )
 
-  const blogForm = () => (
-    <form onSubmit={addBlog}>
-      <h2>Luo uusi blogi</h2>
-      <div>
-        <label>
-          Otsikko
-          <input
-            type='text'
-            value={newTitle}
-            onChange={({ target }) => setNewTitle(target.value)}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Kirjoittaja
-          <input
-            type='text'
-            value={newAuthor}
-            onChange={({ target }) => setNewAuthor(target.value)}
-          />
-        </label>
-      </div>
-      <div>
-        <label>
-          Url
-          <input
-            type='url'
-            value={newUrl}
-            onChange={({ target }) => setNewUrl(target.value)}
-          />
-        </label>
-      </div>
-      <button type='submit'>Tallenna</button>
-    </form>
-  )
   return (
     <div>
       <h1>Tervetuloa käyttämään blogilistaa</h1>
