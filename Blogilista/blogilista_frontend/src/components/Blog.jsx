@@ -7,9 +7,6 @@ const Blog = ({ blog, user, onLike, onDelete }) => {
     margin: '5px',
   }
 
-  console.log('logged user:', user)
-  console.log('blog user:', blog.user)
-
   return (
     <div
       className='blog'

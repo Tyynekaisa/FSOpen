@@ -27,6 +27,7 @@ const BlogForm = ({ createBlog }) => {
               type='text'
               value={newTitle}
               onChange={(event) => setNewTitle(event.target.value)}
+              placeholder='Blogin otsikko'
             />
           </label>
         </div>
@@ -37,6 +38,7 @@ const BlogForm = ({ createBlog }) => {
               type='text'
               value={newAuthor}
               onChange={(event) => setNewAuthor(event.target.value)}
+              placeholder='Kirjoittajan nimi'
             />
           </label>
         </div>
@@ -47,6 +49,7 @@ const BlogForm = ({ createBlog }) => {
               type='url'
               value={newUrl}
               onChange={(event) => setNewUrl(event.target.value)}
+              placeholder='Blogin url muodossa https://esimerkki.com'
             />
           </label>
         </div>
