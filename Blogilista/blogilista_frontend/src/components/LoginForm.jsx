@@ -10,21 +10,22 @@ const LoginForm = ({
       <h2>Kirjaudu sisään</h2>
 
       <form onSubmit={handleSubmit}>
-        <div>
+        <label>
           Käyttäjätunnus
           <input
+            type='text'
             value={userName}
             onChange={handleUsernameChange}
           />
-        </div>
-        <div>
+        </label>
+        <label>
           Salasana
           <input
             type='password'
             value={password}
             onChange={handlePasswordChange}
           />
-        </div>
+        </label>
         <button type='submit'>Kirjaudu</button>
       </form>
     </div>

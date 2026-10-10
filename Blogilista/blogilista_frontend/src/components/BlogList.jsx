@@ -3,7 +3,7 @@ import Blog from './Blog'
 const BlogList = ({ blogs, user, onLike, onDelete }) => {
   blogs.sort((a, b) => b.likes - a.likes)
   return (
-    <div>
+    <div className='blogList'>
       {blogs.map((blog) => (
         <Blog
           key={blog.id}

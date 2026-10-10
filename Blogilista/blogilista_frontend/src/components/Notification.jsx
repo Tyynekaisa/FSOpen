@@ -13,7 +13,14 @@ const ErrorNotification = ({ message }) => {
     return null
   }
 
-  return <div style={errorStyle}>{message}</div>
+  return (
+    <div
+      className='error'
+      style={errorStyle}
+    >
+      {message}
+    </div>
+  )
 }
 
 const Notification = ({ message }) => {
@@ -31,7 +38,14 @@ const Notification = ({ message }) => {
     return null
   }
 
-  return <div style={notificationStyle}>{message}</div>
+  return (
+    <div
+      className='notification'
+      style={notificationStyle}
+    >
+      {message}
+    </div>
+  )
 }
 
 export { Notification, ErrorNotification }

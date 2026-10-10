@@ -52,7 +52,8 @@ const App = () => {
     }
   }
 
-  const handleLogout = async () => {
+  const handleLogout = async (event) => {
+    event.preventDefault()
     window.localStorage.removeItem('loggedBlogAppUser', JSON.stringify(user))
     setUser(null)
     setNotificationMessage('Olet kirjautunut ulos')
@@ -164,7 +165,12 @@ const App = () => {
           <form onSubmit={handleLogout}>
             <p>
               Olet kirjautunut sisään nimellä {user.name}!{' '}
-              <button type='submit'>Kirjaudu ulos</button>
+              <button
+                type='submit'
+                className='logoutButton'
+              >
+                Kirjaudu ulos
+              </button>
             </p>
           </form>
           {blogForm()}
