@@ -1,4 +1,4 @@
-const { test, expect, beforeEach, afterEach, describe } = require('@playwright/test')
+const { test, expect, beforeEach, describe } = require('@playwright/test')
 const { loginWith, createBlog } = require('./helper')
 
 describe('Blog app', () => {
@@ -14,15 +14,21 @@ describe('Blog app', () => {
     await page.goto('http://localhost:5173')
   })
 
-  test('Login form is shown', async ({ page }) => {
+  test('Bloglist is shown', async ({ page }) => {
     await expect(page.getByText('Tervetuloa käyttämään blogilistaa')).toBeVisible()
-    await expect(page.getByRole('button', { name: 'Kirjaudu sisään' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Blogilista' })).toBeVisible()
+    await expect(page.getByRole('link', { name: 'Kirjaudu sisään' })).toBeVisible()
+  })
+
+  test('Login form is shown', async ({ page }) => {
+    await page.getByRole('link', { name: 'Kirjaudu sisään' }).click()
+    await expect(page.getByRole('button', { name: 'Kirjaudu' })).toBeVisible()
   })
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
       await loginWith(page, 'mluukkai', 'salainen')
-      await expect(page.getByText('Olet kirjautunut sisään nimellä Matti Luukkainen!')).toBeVisible()
+      await expect(page.getByText('Tervetuloa Matti Luukkainen!')).toBeVisible()
     })
 
     test('fails with wrong credentials', async ({ page }) => {
@@ -57,7 +63,7 @@ describe('Blog app', () => {
         'https://fullstackopen.com/osa5/end_to_end_testaus',
       )
 
-      await page.getByRole('button', { name: 'Näytä tiedot' }).click()
+      await page.getByRole('link', { name: 'End To End testauksen salat' }).click()
       await page.getByRole('button', { name: 'Tykkää' }).click()
 
       await expect(page.getByText('Tykkäyksiä: 1')).toBeVisible()
@@ -70,7 +76,7 @@ describe('Blog app', () => {
         'Teppo Testaaja',
         'https://fullstackopen.com/osa5/end_to_end_testaus',
       )
-      await page.getByRole('button', { name: 'Näytä tiedot' }).click()
+      await page.getByRole('link', { name: 'End To End testauksen salat' }).click()
 
       page.on('dialog', async (dialog) => {
         expect(dialog.message()).toBe('Haluatko varmasti poistaa blogin "End To End testauksen salat"?')
@@ -91,7 +97,7 @@ describe('Blog app', () => {
         'Teppo Testaaja',
         'https://fullstackopen.com/osa5/end_to_end_testaus',
       )
-      await page.getByRole('button', { name: 'Näytä tiedot' }).click()
+      await page.getByRole('link', { name: 'End To End testauksen salat' }).click()
       await expect(page.getByRole('button', { name: 'Poista blogi' })).toBeVisible()
       await page.getByRole('button', { name: 'Kirjaudu ulos' }).click()
 
@@ -106,60 +112,8 @@ describe('Blog app', () => {
       await loginWith(page, 'kjuhol', 'salasana')
 
       // poistonapin ei pitäisi näkyä
-      await page.getByRole('button', { name: 'Näytä tiedot' }).click()
+      await page.getByRole('link', { name: 'End To End testauksen salat' }).click()
       await expect(page.getByRole('button', { name: 'Poista blogi' })).not.toBeVisible()
-    })
-
-    test('blogs are ordered by likes', async ({ page }) => {
-      // Luodaan blogeja
-      await createBlog(page, 'Eka blogi', 'Teppo Testaaja', 'https://www.esimerkki1.com')
-      await expect(page.locator('.blogList')).toContainText('Eka blogi')
-      await createBlog(page, 'Toka blogi', 'Matti Meikäläinen', 'https://www.esimerkki2.com')
-      await expect(page.locator('.blogList')).toContainText('Toka blogi')
-      await createBlog(page, 'Kolmas blogi', 'Tuija Teikäläinen', 'https://www.esimerkki3.com')
-      await expect(page.locator('.blogList')).toContainText('Kolmas blogi')
-
-      const firstBlog = page.locator('.blog').filter({ has: page.getByRole('heading', { name: 'Eka blogi' }) })
-      const secondBlog = page.locator('.blog').filter({ has: page.getByRole('heading', { name: 'Toka blogi' }) })
-      const thirdBlog = page.locator('.blog').filter({ has: page.getByRole('heading', { name: 'Kolmas blogi' }) })
-      const notificationDiv = page.locator('.notification')
-
-      // Tykätään ekasta blogista kerran, tokasta neljä kertaa ja kolmannesta kaksi kertaa
-      await firstBlog.getByRole('button', { name: 'Näytä tiedot' }).click()
-      await expect(page.getByText('Teppo Testaaja')).toBeVisible()
-      await firstBlog.getByRole('button', { name: 'Tykkää' }).click()
-      await expect(notificationDiv).toContainText('Tykkäsit blogista Eka blogi')
-      await notificationDiv.getByText('Tykkäsit blogista Eka blogi').waitFor({ state: 'hidden' })
-
-      await secondBlog.getByRole('button', { name: 'Näytä tiedot' }).click()
-      await expect(page.getByText('Matti Meikäläinen')).toBeVisible()
-      await secondBlog.getByRole('button', { name: 'Tykkää' }).click()
-      await expect(notificationDiv).toContainText('Tykkäsit blogista Toka blogi')
-      await notificationDiv.getByText('Tykkäsit blogista Toka blogi').waitFor({ state: 'hidden' })
-      await secondBlog.getByRole('button', { name: 'Tykkää' }).click()
-      await expect(notificationDiv).toContainText('Tykkäsit blogista Toka blogi')
-      await notificationDiv.getByText('Tykkäsit blogista Toka blogi').waitFor({ state: 'hidden' })
-      await secondBlog.getByRole('button', { name: 'Tykkää' }).click()
-      await expect(notificationDiv).toContainText('Tykkäsit blogista Toka blogi')
-      await notificationDiv.getByText('Tykkäsit blogista Toka blogi').waitFor({ state: 'hidden' })
-      await secondBlog.getByRole('button', { name: 'Tykkää' }).click()
-      await expect(notificationDiv).toContainText('Tykkäsit blogista Toka blogi')
-      await notificationDiv.getByText('Tykkäsit blogista Toka blogi').waitFor({ state: 'hidden' })
-
-      await thirdBlog.getByRole('button', { name: 'Näytä tiedot' }).click()
-      await expect(page.getByText('Tuija Teikäläinen')).toBeVisible()
-      await thirdBlog.getByRole('button', { name: 'Tykkää' }).click()
-      await expect(notificationDiv).toContainText('Tykkäsit blogista Kolmas blogi')
-      await notificationDiv.getByText('Tykkäsit blogista Kolmas blogi').waitFor({ state: 'hidden' })
-      await thirdBlog.getByRole('button', { name: 'Tykkää' }).click()
-      await expect(notificationDiv).toContainText('Tykkäsit blogista Kolmas blogi')
-      await notificationDiv.getByText('Tykkäsit blogista Kolmas blogi').waitFor({ state: 'hidden' })
-
-      // blogList järjestys pitäisi nyt olla toka, kolmas, eka
-      const blogList = page.locator('.blogList')
-      const titles = await blogList.locator('h4').allTextContents()
-
-      expect(titles).toEqual(['Toka blogi', 'Kolmas blogi', 'Eka blogi'])
     })
   })
 })

@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import BlogList from './BlogList'
 
+// HUOM! Nämä testit eivät enää toimi
+
 describe('<BlogList /> with togglable and buttons', () => {
   const blog = {
     title: 'React sovellusten testaaminen',

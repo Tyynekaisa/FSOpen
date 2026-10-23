@@ -36,9 +36,9 @@ describe('blogs_api.test', () => {
 
     token = loginResponse.body.token
 
-    let blogObject = new Blog({ ...helper.initialBlogs[0], user: user._id })
+    let blogObject = new Blog({ ...helper.initialBlogs[0], user: user })
     await blogObject.save()
-    blogObject = new Blog({ ...helper.initialBlogs[1], user: user._id })
+    blogObject = new Blog({ ...helper.initialBlogs[1], user: user })
     await blogObject.save()
   })
   test('blogs are returned as json', async () => {
@@ -68,7 +68,7 @@ describe('blogs_api.test', () => {
     assert.strictEqual(resultBlog.body.author, blogToView.author)
     assert.strictEqual(resultBlog.body.url, blogToView.url)
     assert.strictEqual(resultBlog.body.likes, blogToView.likes)
-    assert.strictEqual(resultBlog.body.user, blogToView.user.toString())
+    assert.strictEqual(resultBlog.body.user.id, blogToView.user.toString())
   })
 
   test('a valid blog can be added ', async () => {

@@ -1,21 +1,28 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect } from 'react'
 import blogService from './services/blogs'
-import loginService from './services/login'
-import { Notification, ErrorNotification } from './components/Notification'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  Navigate,
+  useNavigate,
+  useMatch,
+} from 'react-router-dom'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
-import Togglable from './components/Togglable'
-import BlogList from './components/Bloglist'
+import BlogList from './components/BlogList'
+import { Notification, ErrorNotification } from './components/Notification'
+import Blog from './components/Blog'
 
-const App = () => {
+const AppContent = () => {
+  const navigate = useNavigate()
   const [blogs, setBlogs] = useState([])
   const [errorMessage, setErrorMessage] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState(null)
-  const [userName, setUserName] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  const blogFormRef = useRef()
+  const match = useMatch('/blogs/:id')
+  const blog = match ? blogs.find((b) => b.id === match.params.id) : null
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs.blogs))
@@ -24,98 +31,48 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
+      try {
+        const loggedUser = JSON.parse(loggedUserJSON)
+        setUser(loggedUser)
+        blogService.setToken(loggedUser.token)
+      } catch {
+        window.localStorage.removeItem('loggedBlogappUser')
+      }
     }
   }, [])
 
-  const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      const user = await loginService.login({ userName, password })
-
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-      blogService.setToken(user.token)
-      setUser(user)
-      setUserName('')
-      setPassword('')
-      setNotificationMessage(`Tervetuloa ${user.name}!`)
-      setTimeout(() => {
-        setNotificationMessage(null)
-      }, 3000)
-    } catch {
-      setErrorMessage('Väärä käyttäjätunnus tai salasana')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 3000)
-    }
+  const handleLogin = async (loggedUser) => {
+    window.localStorage.setItem('loggedBlogappUser', JSON.stringify(loggedUser))
+    blogService.setToken(loggedUser.token)
+    setUser(loggedUser)
+    navigate('/')
+    setNotificationMessage(`Tervetuloa ${loggedUser.name}!`)
+    setTimeout(() => {
+      setNotificationMessage(null)
+    }, 2000)
   }
 
-  const handleLogout = async (event) => {
-    event.preventDefault()
-    window.localStorage.removeItem('loggedBlogAppUser', JSON.stringify(user))
+  // const handleLogout = async (event) => {
+  const handleLogout = async () => {
+    //event.preventDefault()
+    window.localStorage.removeItem('loggedBlogappUser')
+    blogService.setToken(null)
     setUser(null)
     setNotificationMessage('Olet kirjautunut ulos')
+    navigate('/')
     setTimeout(() => {
       setNotificationMessage(null)
     }, 3000)
   }
 
-  const addBlog = (blogObject) => {
-    try {
-      if (!blogObject.title || !blogObject.author || !blogObject.url) {
-        setErrorMessage('Kaikki kentät tulee täyttää')
-        setTimeout(() => {
-          setErrorMessage(null)
-        }, 3000)
-        return
-      }
-      blogFormRef.current.toggleVisibility()
-      blogService.create(blogObject).then((returnedBlog) => {
-        setBlogs(blogs.concat(returnedBlog))
-      })
-      setNotificationMessage(`Uusi blogi ${blogObject.title} lisätty!`)
-      setTimeout(() => {
-        setNotificationMessage(null)
-      }, 3000)
-    } catch {
-      setErrorMessage('Blogin lisääminen epäonnistui')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 3000)
-    }
-  }
-
-  const handleLikeBlog = async (blog) => {
-    try {
-      const updatedBlog = await blogService.update(blog.id, {
-        ...blog,
-        likes: blog.likes + 1,
-      })
-      setBlogs(blogs.map((b) => (b.id === blog.id ? updatedBlog : b)))
-      setNotificationMessage(`Tykkäsit blogista ${blog.title}`)
-      setTimeout(() => {
-        setNotificationMessage(null)
-      }, 3000)
-    } catch {
-      setErrorMessage('Blogin tykkääminen epäonnistui')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 3000)
-    }
-  }
-
-  const handleDeleteBlog = async (blog) => {
-    const confirmDelete = window.confirm(
-      `Haluatko varmasti poistaa blogin "${blog.title}"?`,
-    )
-    if (!confirmDelete) {
-      return
-    }
+  const deleteBlog = async (blog) => {
     try {
       await blogService.remove(blog.id)
-      setBlogs(blogs.filter((b) => b.id !== blog.id))
+
+      setBlogs((currentBlogs) =>
+        currentBlogs.filter((item) => item.id !== blog.id),
+      )
+
       setNotificationMessage(`Blogi "${blog.title}" poistettu!`)
       setTimeout(() => {
         setNotificationMessage(null)
@@ -128,62 +85,130 @@ const App = () => {
     }
   }
 
-  const loginForm = () => (
-    <Togglable
-      buttonLabel='Kirjaudu sisään'
-      cancelLabel='Peruuta'
-    >
-      <LoginForm
-        userName={userName}
-        password={password}
-        handleUsernameChange={({ target }) => setUserName(target.value)}
-        handlePasswordChange={({ target }) => setPassword(target.value)}
-        handleSubmit={handleLogin}
-      />
-    </Togglable>
-  )
+  const likeBlog = async (blog) => {
+    const updatedBlog = await blogService.update(blog.id, {
+      ...blog,
+      likes: blog.likes + 1,
+    })
 
-  const blogForm = () => (
-    <Togglable
-      buttonLabel='Luo uusi blogi'
-      cancelLabel='Peruuta'
-      ref={blogFormRef}
-    >
-      <BlogForm createBlog={addBlog} />
-    </Togglable>
-  )
+    setBlogs((currentBlogs) =>
+      currentBlogs.map((item) =>
+        item.id === updatedBlog.id ? updatedBlog : item,
+      ),
+    )
+  }
+
+  const addBlog = (blogObject) => {
+    try {
+      blogService.create(blogObject).then((returnedBlog) => {
+        setBlogs(blogs.concat(returnedBlog))
+      })
+      setNotificationMessage(`Uusi blogi ${blogObject.title} lisätty!`)
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 2000)
+    } catch {
+      setErrorMessage('Blogin lisääminen epäonnistui')
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 2000)
+    }
+  }
+
+  const padding = {
+    padding: 5,
+  }
 
   return (
-    <div>
-      <h1>Tervetuloa käyttämään blogilistaa</h1>
+    <>
+      <div>
+        <Link
+          style={padding}
+          to='/'
+        >
+          BLOGILISTA
+        </Link>
+
+        {user && (
+          <Link
+            style={padding}
+            to='/create'
+          >
+            UUSI BLOGI
+          </Link>
+        )}
+
+        {user && (
+          <div>
+            <button
+              type='submit'
+              style={padding}
+              className='logoutButton'
+              onClick={handleLogout}
+            >
+              Kirjaudu ulos
+            </button>
+          </div>
+        )}
+        {!user && (
+          <Link
+            style={padding}
+            to='/login'
+          >
+            KIRJAUDU SISÄÄN
+          </Link>
+        )}
+      </div>
+
       <Notification message={notificationMessage} />
       <ErrorNotification message={errorMessage} />
 
-      {!user && loginForm()}
-      {user && (
-        <div>
-          <form onSubmit={handleLogout}>
-            <p>
-              Olet kirjautunut sisään nimellä {user.name}!{' '}
-              <button
-                type='submit'
-                className='logoutButton'
-              >
-                Kirjaudu ulos
-              </button>
-            </p>
-          </form>
-          {blogForm()}
-          <BlogList
-            blogs={blogs}
-            user={user}
-            onLike={handleLikeBlog}
-            onDelete={handleDeleteBlog}
+      <Routes>
+        <Route
+          path='/'
+          element={<BlogList blogs={blogs} />}
+        />
+        <Route
+          path='/blogs/:id'
+          element={
+            <Blog
+              blog={blog}
+              user={user}
+              deleteBlog={deleteBlog}
+              likeBlog={likeBlog}
+            />
+          }
+        />
+        <Route
+          path='/create'
+          element={<BlogForm createBlog={addBlog} />}
+        />
+        {!user && (
+          <Route
+            path='/login'
+            element={<LoginForm login={handleLogin} />}
           />
-        </div>
-      )}
-    </div>
+        )}
+        {user && (
+          <Route
+            path='/login'
+            element={
+              <Navigate
+                to='/'
+                replace
+              />
+            }
+          />
+        )}
+      </Routes>
+    </>
   )
 }
+
+const App = () => (
+  <Router>
+    <AppContent />
+  </Router>
+)
 
 export default App
