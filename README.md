@@ -29,10 +29,16 @@ Anna-Kaisa Juhola
 - [Full stack Renderissä](https://fsopen-8oki.onrender.com)
 - [Osa 3 koko kansio](/Osa3/)
 
-## Osa 4 Tehtäväpalautukset
-
-- Tehtävät 4.1. - 4.23.
-  - [Blogilista Backend](/Blogilista/blogilista_backend/)
-  - [Blogilista Testit](/Blogilista/blogilista_backend/tests/)
+## Osa 4-5 Tehtäväpalautukset
 
 [Blogilista](/Blogilista/)
+
+**Tehtävät 4.1. - 4.23 & 5.1. - 5.31.**
+
+- [Blogilista Backend](/Blogilista/blogilista_backend/)
+- [Blogilista Backend Testit](/Blogilista/blogilista_backend/tests/)
+- [Blogilista Frontend](/Blogilista/blogilista_frontend/)
+- [Blogilista End to End -testit](/Blogilista/e2e/)
+
+![Blogilista etusivu](/Blogilista/blogilista_frontend/public/Blogilista.png)
+![Blogilista blogin sivu](/Blogilista/blogilista_frontend/public/Blogilista_blogi.png)
