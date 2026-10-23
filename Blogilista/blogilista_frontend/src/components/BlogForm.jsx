@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Notification, ErrorNotification } from './Notification'
+import { ErrorNotification } from './Notification'
+import { TextField, Button, Typography } from '@mui/material'
 
 const BlogForm = ({ createBlog }) => {
   const navigate = useNavigate()
@@ -38,42 +39,51 @@ const BlogForm = ({ createBlog }) => {
   return (
     <div>
       <ErrorNotification message={errorMessage} />
-      <h2>Luo uusi blogi</h2>
+      <Typography
+        variant='h5'
+        component='div'
+      >
+        Luo uusi blogi
+      </Typography>
       <form onSubmit={addBlog}>
         <div>
-          <label>
-            Otsikko
-            <input
-              type='text'
-              value={newTitle}
-              onChange={(event) => setNewTitle(event.target.value)}
-              placeholder='Blogin otsikko'
-            />
-          </label>
+          <TextField
+            label='Otsikko'
+            type='text'
+            value={newTitle}
+            onChange={(event) => setNewTitle(event.target.value)}
+            style={{ marginTop: 10 }}
+            size='small'
+          />
         </div>
         <div>
-          <label>
-            Kirjoittaja
-            <input
-              type='text'
-              value={newAuthor}
-              onChange={(event) => setNewAuthor(event.target.value)}
-              placeholder='Kirjoittajan nimi'
-            />
-          </label>
+          <TextField
+            label='Kirjoittaja'
+            type='text'
+            value={newAuthor}
+            onChange={(event) => setNewAuthor(event.target.value)}
+            style={{ marginTop: 10 }}
+            size='small'
+          />
         </div>
         <div>
-          <label>
-            Url
-            <input
-              type='url'
-              value={newUrl}
-              onChange={(event) => setNewUrl(event.target.value)}
-              placeholder='Blogin url muodossa https://esimerkki.com'
-            />
-          </label>
+          <TextField
+            label='Url'
+            type='url'
+            value={newUrl}
+            onChange={(event) => setNewUrl(event.target.value)}
+            placeholder='Blogin url muodossa https://esimerkki.com'
+            style={{ marginTop: 10 }}
+            size='small'
+          />
         </div>
-        <button type='submit'>Tallenna</button>
+        <Button
+          type='submit'
+          variant='contained'
+          style={{ marginTop: 10 }}
+        >
+          Tallenna
+        </Button>
       </form>
     </div>
   )

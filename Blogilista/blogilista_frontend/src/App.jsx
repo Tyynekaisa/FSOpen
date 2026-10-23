@@ -14,6 +14,7 @@ import BlogForm from './components/BlogForm'
 import BlogList from './components/BlogList'
 import { Notification, ErrorNotification } from './components/Notification'
 import Blog from './components/Blog'
+import { Container, AppBar, Toolbar, Button, Typography } from '@mui/material'
 
 const AppContent = () => {
   const navigate = useNavigate()
@@ -115,50 +116,76 @@ const AppContent = () => {
     }
   }
 
-  const padding = {
-    padding: 5,
-  }
+  const style = { '&:hover': { bgcolor: 'rgba(255,255,255,0.3)' } }
 
   return (
-    <>
-      <div>
-        <Link
-          style={padding}
-          to='/'
-        >
-          BLOGILISTA
-        </Link>
-
-        {user && (
-          <Link
-            style={padding}
-            to='/create'
+    <Container>
+      <AppBar
+        position='static'
+        sx={{ mb: 2 }}
+      >
+        <Toolbar>
+          <Typography
+            variant='h5'
+            component='a'
+            href='/'
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              fontWeight: 700,
+              letterSpacing: '.2rem',
+              color: 'inherit',
+              textDecoration: 'none',
+              textTransform: 'uppercase',
+              flexGrow: 1,
+            }}
           >
-            UUSI BLOGI
-          </Link>
-        )}
-
-        {user && (
-          <div>
-            <button
-              type='submit'
-              style={padding}
-              className='logoutButton'
+            Blogilista
+          </Typography>
+          <Button
+            color='inherit'
+            component={Link}
+            to='/'
+            nativeButton={false}
+            sx={style}
+          >
+            Etusivu
+          </Button>
+          {user && (
+            <Button
+              color='inherit'
+              component={Link}
+              to='/create'
+              nativeButton={false}
+              sx={style}
+            >
+              Uusi blogi
+            </Button>
+          )}
+          {user && (
+            <Button
+              color='inherit'
+              component={Link}
               onClick={handleLogout}
+              nativeButton={false}
+              sx={style}
             >
               Kirjaudu ulos
-            </button>
-          </div>
-        )}
-        {!user && (
-          <Link
-            style={padding}
-            to='/login'
-          >
-            KIRJAUDU SISÄÄN
-          </Link>
-        )}
-      </div>
+            </Button>
+          )}
+          {!user && (
+            <Button
+              color='inherit'
+              component={Link}
+              to='/login'
+              nativeButton={false}
+              sx={style}
+            >
+              Kirjaudu sisään
+            </Button>
+          )}
+        </Toolbar>
+      </AppBar>
 
       <Notification message={notificationMessage} />
       <ErrorNotification message={errorMessage} />
@@ -201,7 +228,7 @@ const AppContent = () => {
           />
         )}
       </Routes>
-    </>
+    </Container>
   )
 }
 

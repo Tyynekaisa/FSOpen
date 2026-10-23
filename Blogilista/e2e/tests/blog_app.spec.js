@@ -33,9 +33,10 @@ describe('Blog app', () => {
 
     test('fails with wrong credentials', async ({ page }) => {
       await loginWith(page, 'mluukkai', 'väärä')
+      await expect(page.getByText('Väärä käyttäjätunnus tai salasana')).toBeVisible()
 
-      const errorDiv = page.locator('.error')
-      await expect(errorDiv).toContainText('Väärä käyttäjätunnus tai salasana')
+      // const errorDiv = page.locator('.error')
+      // await expect(errorDiv).toContainText('Väärä käyttäjätunnus tai salasana')
     })
   })
 
@@ -85,8 +86,8 @@ describe('Blog app', () => {
 
       await page.getByRole('button', { name: 'Poista blogi' }).click()
 
-      const notificationDiv = page.locator('.notification')
-      await expect(notificationDiv).toContainText('Blogi "End To End testauksen salat" poistettu!')
+      // const notificationDiv = page.locator('.notification')
+      await expect(page.getByText('Blogi "End To End testauksen salat" poistettu!')).toBeVisible()
       await expect(page.getByText('End To End testauksen salat')).not.toBeVisible()
     })
 

@@ -2,16 +2,14 @@ import loginService from '../services/login'
 import blogService from '../services/blogs'
 import { useState } from 'react'
 import { ErrorNotification } from './Notification'
+import { TextField, Button, Typography } from '@mui/material'
 
 const LoginForm = ({ login }) => {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
-  // const [notificationMessage, setNotificationMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
   const handleLogin = async (event) => {
-    console.log('handleLogin')
-    console.log('käyttäjätunnus: ', userName)
     event.preventDefault()
     try {
       const user = await loginService.login({ userName, password })
@@ -19,12 +17,8 @@ const LoginForm = ({ login }) => {
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
       login(user)
-      //setNotificationMessage(`Tervetuloa ${user.name}!`)
       setUserName('')
       setPassword('')
-      // setTimeout(() => {
-      //   setNotificationMessage(null)
-      // }, 3000)
     } catch {
       setErrorMessage('Väärä käyttäjätunnus tai salasana')
       setTimeout(() => {
@@ -38,33 +32,45 @@ const LoginForm = ({ login }) => {
 
   return (
     <div>
-      <h2>Kirjaudu sisään</h2>
+      <Typography
+        variant='h5'
+        component='div'
+      >
+        Kirjaudu sisään
+      </Typography>
       {/* <Notification message={notificationMessage} /> */}
       <ErrorNotification message={errorMessage} />
 
       <form onSubmit={login}>
-        <label>
-          Käyttäjätunnus
-          <input
+        <div>
+          <TextField
+            label='Käyttäjätunnus'
             type='text'
             value={userName}
             onChange={handleUserNameChange}
+            style={{ marginTop: 10 }}
+            size='small'
           />
-        </label>
-        <label>
-          Salasana
-          <input
+        </div>
+        <div>
+          <TextField
+            label='Salasana'
             type='password'
             value={password}
             onChange={handlePasswordChange}
+            style={{ marginTop: 10 }}
+            size='small'
           />
-        </label>
-        <button
+        </div>
+
+        <Button
           type='submit'
+          variant='contained'
           onClick={handleLogin}
+          style={{ marginTop: 10 }}
         >
           Kirjaudu
-        </button>
+        </Button>
       </form>
     </div>
   )

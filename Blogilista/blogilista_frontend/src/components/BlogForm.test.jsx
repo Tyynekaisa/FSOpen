@@ -1,18 +1,21 @@
 import { render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router-dom'
 import BlogForm from './BlogForm'
 import userEvent from '@testing-library/user-event'
-
-// HUOM! Nämä testit eivät enää toimi
 
 test('<BlogForm /> updates parent state and calls onSubmit', async () => {
   const user = userEvent.setup()
   const createBlog = vi.fn()
 
-  render(<BlogForm createBlog={createBlog} />)
+  render(
+    <MemoryRouter>
+      <BlogForm createBlog={createBlog} />
+    </MemoryRouter>,
+  )
 
-  const title = screen.getByLabelText('Otsikko')
-  const author = screen.getByLabelText('Kirjoittaja')
-  const url = screen.getByLabelText('Url')
+  const title = screen.getByRole('textbox', { name: 'Otsikko' })
+  const author = screen.getByRole('textbox', { name: 'Kirjoittaja' })
+  const url = screen.getByRole('textbox', { name: 'Url' })
   const sendButton = screen.getByRole('button', { name: 'Tallenna' })
 
   await user.type(title, 'Lomakkeen testausta')
@@ -23,10 +26,10 @@ test('<BlogForm /> updates parent state and calls onSubmit', async () => {
   )
   await user.click(sendButton)
 
-  expect(createBlog.mock.calls).toHaveLength(1)
-  expect(createBlog.mock.calls[0][0].title).toBe('Lomakkeen testausta')
-  expect(createBlog.mock.calls[0][0].author).toBe('Kaisa')
-  expect(createBlog.mock.calls[0][0].url).toBe(
-    'https://fullstackopen.com/osa5/react_sovellusten_testaaminen#lomakkeiden-testaus',
-  )
+  expect(createBlog).toHaveBeenCalledTimes(1)
+  expect(createBlog).toHaveBeenCalledWith({
+    title: 'Lomakkeen testausta',
+    author: 'Kaisa',
+    url: 'https://fullstackopen.com/osa5/react_sovellusten_testaaminen#lomakkeiden-testaus',
+  })
 })

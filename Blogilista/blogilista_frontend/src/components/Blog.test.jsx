@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
+import userEvent from '@testing-library/user-event'
 import Blog from './Blog'
 
 describe('<Blog />', () => {
@@ -54,9 +55,8 @@ describe('<Blog />', () => {
   test('shows blog details and likes but no buttons to a logged-out user', () => {
     renderBlog()
 
-    expect(
-      screen.getByText(/Kaisa: React sovellusten testaaminen/),
-    ).toBeDefined()
+    expect(screen.getByText(/Kaisa:/)).toBeDefined()
+    expect(screen.getByText(/React sovellusten testaaminen/)).toBeDefined()
     expect(screen.getByRole('link', { name: blog.url })).toBeDefined()
     expect(screen.getByText(/Tykkäyksiä: 7/)).toBeDefined()
     expect(screen.queryAllByRole('button')).toHaveLength(0)
@@ -84,5 +84,21 @@ describe('<Blog />', () => {
     expect(screen.getByRole('button', { name: 'Tykkää' })).toBeDefined()
     expect(screen.getByRole('button', { name: 'Poista blogi' })).toBeDefined()
     expect(screen.getAllByRole('button')).toHaveLength(2)
+  })
+
+  test('clicking the like button twice calls event handler twice', async () => {
+    const mockHandler = vi.fn()
+    renderBlog({
+      user: { id: 'user-1', userName: 'alice', name: 'Alice' },
+      likeBlog: mockHandler,
+      deleteBlog: () => {},
+    })
+    const user = userEvent.setup()
+
+    const likeButton = screen.getByRole('button', { name: 'Tykkää' })
+    await user.click(likeButton)
+    await user.click(likeButton)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })

@@ -1,17 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Notification, ErrorNotification } from './Notification'
+import { Card, CardContent, Button, Typography, Link } from '@mui/material'
+import FavoriteIcon from '@mui/icons-material/Favorite'
+import { pink } from '@mui/material/colors'
 
 const Blog = ({ blog, user, deleteBlog, likeBlog }) => {
   const navigate = useNavigate()
   const [errorMessage, setErrorMessage] = useState(null)
   const [notificationMessage, setNotificationMessage] = useState(null)
 
-  const blogStyle = {
-    padding: '5px',
-    border: '1px solid black',
-    margin: '5px',
-  }
   if (!blog) {
     return null
   }
@@ -43,25 +41,6 @@ const Blog = ({ blog, user, deleteBlog, likeBlog }) => {
     }
   }
 
-  // const handleDeleteBlog = () => {
-  //   const title = blog.title
-  //   const confirmDelete = window.confirm(
-  //     `Haluatko varmasti poistaa blogin "${title}"?`,
-  //   )
-  //   if (!confirmDelete) {
-  //     return
-  //   }
-  //   try {
-  //     deleteBlog(blog)
-  //     navigate('/')
-  //   } catch {
-  //     setErrorMessage('Blogin poistaminen epäonnistui')
-  //     setTimeout(() => {
-  //       setErrorMessage(null)
-  //     }, 2000)
-  //   }
-  // }
-
   const handleDeleteBlog = async () => {
     const confirmDelete = window.confirm(
       `Haluatko varmasti poistaa blogin "${blog.title}"?`,
@@ -87,33 +66,63 @@ const Blog = ({ blog, user, deleteBlog, likeBlog }) => {
       <Notification message={notificationMessage} />
       <ErrorNotification message={errorMessage} />
 
-      <div
+      <Card
+        sx={{ minWidth: 275 }}
         className='blog'
-        style={blogStyle}
+        variant='outlined'
       >
-        <h3 style={{ display: 'inline', paddingRight: '10px' }}>
-          {blog.author}: {blog.title}
-        </h3>
+        <CardContent>
+          <Typography sx={{ color: 'text.secondary', fontSize: 16 }}>
+            {blog.author}:
+          </Typography>
+          <Typography
+            gutterBottom
+            variant='h5'
+            component='div'
+          >
+            {blog.title}
+          </Typography>
 
-        <div>
-          <p>
-            <a href={blog.url}>{blog.url}</a>
-          </p>
-          <p>
-            Tykkäyksiä: {blog.likes}{' '}
-            {user && <button onClick={handleLikeBlog}>Tykkää</button>}
-          </p>
-          {blogUser && <p>Lisännyt: {blogUser.name}</p>}
-          {isOwner && (
-            <button
-              id='deleteButton'
-              onClick={handleDeleteBlog}
+          <div>
+            <Link
+              href={blog.url}
+              underline='none'
             >
-              Poista blogi
-            </button>
-          )}
-        </div>
-      </div>
+              {blog.url}
+            </Link>
+            {blogUser && (
+              <Typography style={{ marginTop: 20 }}>
+                Lisännyt: {blogUser.name}
+              </Typography>
+            )}
+            <Typography>
+              Tykkäyksiä: {blog.likes}
+              {user && (
+                <Button
+                  onClick={handleLikeBlog}
+                  style={{ marginLeft: 10 }}
+                  size='small'
+                  startIcon={<FavoriteIcon sx={{ color: pink[500] }} />}
+                >
+                  Tykkää
+                </Button>
+              )}
+            </Typography>
+            {isOwner && (
+              <Button
+                id='deleteButton'
+                onClick={handleDeleteBlog}
+                variant='outlined'
+                color='error'
+                size='small'
+                style={{ marginTop: 10 }}
+              >
+                Poista blogi
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   )
 }
